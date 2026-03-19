@@ -1,0 +1,42 @@
+export const SaleCounterPayload = {
+  update: {
+    selectedDate: "",
+    starting_point: "",
+    ending_point: "",
+    userType: "",
+    choseRoute: [],
+    route: "",
+    selectedSeat: [],
+  },
+  store: {
+    selectedDate: "",
+    starting_point: "",
+    ending_point: "",
+    userType: "",
+    choseRoute: [],
+    route: "",
+    selectedSeat: [],
+  },
+  check: {
+    start_date: "",
+    end_date: "",
+    vehicles_type_id: "",
+    // userType: "",
+    // choseRoute: [],
+    // route: "",
+    // selectedSeat: [],
+  },
+  columnsName: "saleCounterColumns",
+
+  paginateParams: {
+    page: 1,
+    per_page: 10,
+    // columns: "member,route,phone,nrc,seat,total,note,startTime",
+    search: "",
+    order: "id",
+    sort: "ASC",
+    value: "",
+    start_date: "",
+    end_date: "",
+  },
+};

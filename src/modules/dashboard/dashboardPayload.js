@@ -1,0 +1,40 @@
+export const dashboardPayload = {
+  columnsName: "dashboardColumns",
+  columns: [
+    { id: "created_at", label: "Created At", minWidth: 100 },
+    // { id: "created_by", label: "Name", minWidth: 200 },
+    { id: "start_time", label: "Start Time", minWidth: 200 },
+    { id: "route_name", label: "Route", minWidth: 200 },
+    { id: "name", label: "Name", minWidth: 200 },
+    { id: "nrc", label: "Nrc", minWidth: 170 },
+    { id: "phone", label: "Phone", minWidth: 100 },
+    { id: "seat", label: "Seat", minWidth: 300 },
+    { id: "total", label: "Total", minWidth: 100 },
+    { id: "commission", label: "Commission", minWidth: 100 },
+    { id: "note", label: "Note", minWidth: 200 },
+  ],
+  paginateParams: {
+    page: 1,
+    per_page: 10,
+    columns:
+      "route_name,start_time,name,seat,payment_name,status,commission,created_by,option",
+    search: "",
+    order: "created_at",
+    sort: "DESC",
+    value: "",
+    start_date: null,
+    end_date: null,
+  },
+  agentPaginateParams: {
+    page: 1,
+    per_page: 10,
+    columns:
+      "route_name,start_time,name,seat,payment_name,status,commission,created_by,option",
+    search: "",
+    order: "created_at",
+    sort: "DESC",
+    value: "",
+    start_date: null,
+    end_date: null,
+  },
+};

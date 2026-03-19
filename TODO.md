@@ -1,0 +1,2 @@
+- [x] Modify getAllowedPaths in src/layouts/default/index.js to allow menu items without roles
+- [x] Remove roles from profile and logout items in src/layouts/default/defaultPaths.js

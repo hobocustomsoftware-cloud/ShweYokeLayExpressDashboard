@@ -1,0 +1,43 @@
+export const CloseSeatsPayload = {
+  update: {
+    selectedDate: "",
+    starting_point: "",
+    ending_point: "",
+    userType: "",
+    choseRoute: [],
+    route: "",
+    selectedSeat: [],
+  },
+  store: {
+    selectedDate: "",
+    ending_point: "",
+    starting_point: "",
+    userType: "",
+    choseRoute: [],
+    route: "",
+    selectedSeat: [],
+  },
+  check: {
+    start_date: "",
+    end_date: "",
+    route_id: "",
+    close_side: "",
+    seat_layout: "",
+    total_seat: "",
+    selectedDate: "",
+    selectedEndDate: "",
+    //  bookedSeats, selectedRoute,
+  },
+  columnsName: "saleCounterColumns",
+
+  paginateParams: {
+    page: 1,
+    per_page: 10,
+    search: "",
+    order: "id",
+    sort: "ASC",
+    value: "",
+    start_date: "",
+    end_date: "",
+  },
+};
