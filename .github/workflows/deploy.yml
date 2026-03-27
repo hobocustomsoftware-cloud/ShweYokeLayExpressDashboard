@@ -1,34 +1,34 @@
-name: Dashboard CI/CD and Deploy
+# name: Dashboard CI/CD and Deploy
 
-on:
-  push:
-    branches: [ "development" ]
+# on:
+#   push:
+#     branches: [ "development" ]
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v3
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18' # သင့် Dashboard ရဲ့ version အလိုက် ပြင်နိုင်ပါတယ်
+#     - name: Setup Node.js
+#       uses: actions/setup-node@v3
+#       with:
+#         node-version: '18' # သင့် Dashboard ရဲ့ version အလိုက် ပြင်နိုင်ပါတယ်
 
-    - name: Install Dependencies
-      run: npm install
+#     - name: Install Dependencies
+#       run: npm install
 
-    - name: Build Project
-      run: npm run build
+#     - name: Build Project
+#       run: npm run build
 
-    - name: Sync Build Folder to ifastnet
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-      with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        # Build ထွက်လာတဲ့ folder (ဥပမာ- dist သို့မဟုတ် build) ကိုပဲ တင်ပေးရန်
-        local-dir: ./dist/ 
-        server-dir: ./htdocs/shweyokelay_dashboard/
+#     - name: Sync Build Folder to ifastnet
+#       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+#       with:
+#         server: ${{ secrets.FTP_SERVER }}
+#         username: ${{ secrets.FTP_USERNAME }}
+#         password: ${{ secrets.FTP_PASSWORD }}
+#         # Build ထွက်လာတဲ့ folder (ဥပမာ- dist သို့မဟုတ် build) ကိုပဲ တင်ပေးရန်
+#         local-dir: ./dist/ 
+#         server-dir: ./htdocs/shweyokelay_dashboard/
