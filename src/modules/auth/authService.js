@@ -1,5 +1,5 @@
 import { keys, laravelDecrypt } from "../../constants/config";
-import { endpoints, secretKey } from "../../constants/endpoints";
+import { endpoints } from "../../constants/endpoints";
 import { postRequest } from "../../helpers/api";
 import { httpServiceHandler } from "../../helpers/handler";
 import { setData } from "../../helpers/localstorage";
@@ -10,7 +10,6 @@ import {
   updateRole,
   updateUser,
 } from "../../shares/shareSlice";
-import CryptoJS from "crypto-js";
 
 export const authService = {
   login: async (payload, dispatch) => {
@@ -19,10 +18,12 @@ export const authService = {
     await httpServiceHandler(dispatch, response);
 
     if (response.status === 200) {
-      const encrypted = response?.data;
+      const loginPayload = response?.data;
       const decryptData =
-        encrypted != null && typeof encrypted === "string"
-          ? laravelDecrypt(encrypted)
+        loginPayload != null && typeof loginPayload === "string"
+          ? laravelDecrypt(loginPayload)
+          : loginPayload != null && typeof loginPayload === "object"
+          ? loginPayload
           : null;
 
       if (!decryptData?.user) {
@@ -37,7 +38,12 @@ export const authService = {
       }
 
       setData(keys.API_TOKEN, decryptData?.token);
-      setData(keys.CODE, response?.data);
+      setData(
+        keys.CODE,
+        typeof loginPayload === "string"
+          ? loginPayload
+          : decryptData
+      );
 
       dispatch(updateRole(decryptData?.role));
       const permissionNames = decryptData?.permissions?.map((p) => p.name) || [];

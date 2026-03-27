@@ -11,7 +11,7 @@ export const imageURL =
 // prod || uat default (must match backend APP_KEY without "base64:" prefix)
 export const secretKey =
   process.env.REACT_APP_LARAVEL_SECRET_KEY ??
-  "Z7QDysQMCw2kHq3YsAL/C+xdtnDfl4Of92T43Lgx5f4=";
+  "1GgK/5jB8t71Jgp6cFvQeMiGQh0g16gq07Z9mR4ob+c=";
 
 export const endpoints = {
   dashboardData: "dashboardData",

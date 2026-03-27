@@ -34,10 +34,26 @@ const key = CryptoJS.enc.Base64.parse(secretKey);
 
 // Laravel uses AES-256-CBC, IV is embedded inside encrypted payload
 export const laravelDecrypt = (encryptedData) => {
-  if (encryptedData == null || typeof encryptedData !== "string") {
+  if (encryptedData == null) {
     return null;
   }
+
+  // New API responses may already be plain objects.
+  if (typeof encryptedData === "object") {
+    return encryptedData?.user ? encryptedData : null;
+  }
+
+  if (typeof encryptedData !== "string") {
+    return null;
+  }
+
   try {
+    // When `CODE` is stored as JSON string, accept it directly.
+    if (encryptedData.trim().startsWith("{")) {
+      const plain = JSON.parse(encryptedData);
+      return plain?.user ? plain : null;
+    }
+
     // Backend uses `Crypt::encryptString()` which returns a base64 string.
     // Some older clients stored it as "base64Payload.something" — support both.
     const base64Payload = encryptedData.includes(".")

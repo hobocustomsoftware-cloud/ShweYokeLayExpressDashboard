@@ -53,8 +53,8 @@ export const Login = () => {
 
     if (result.status !== 200) return;
 
-    const encrypted = result?.data;
-    if (encrypted == null || typeof encrypted !== "string") {
+    const loginPayload = result?.data;
+    if (loginPayload == null) {
       dispatch(
         updateNotification({
           variant: "error",
@@ -64,7 +64,12 @@ export const Login = () => {
       return;
     }
 
-    const decrypted = await laravelDecrypt(encrypted);
+    const decrypted =
+      typeof loginPayload === "string"
+        ? laravelDecrypt(loginPayload)
+        : typeof loginPayload === "object"
+        ? loginPayload
+        : null;
     if (!decrypted?.user) {
       dispatch(
         updateNotification({
@@ -77,7 +82,10 @@ export const Login = () => {
     }
 
     // Persist encrypted payload + token for DefaultLayout auth bootstrap
-    setData(keys.CODE, encrypted);
+    setData(
+      keys.CODE,
+      typeof loginPayload === "string" ? loginPayload : decrypted
+    );
     setData(keys.API_TOKEN, decrypted?.token);
 
     dispatch(updateRole(decrypted?.role));
