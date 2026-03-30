@@ -1,17 +1,15 @@
-// Configurable via CRA env vars (recommended)
-// - REACT_APP_API_BASE_URL (e.g. http://localhost:8000/api)
-// - REACT_APP_IMAGE_URL (e.g. http://localhost:8000)
-// - REACT_APP_LARAVEL_SECRET_KEY (Laravel APP_KEY base64 decoded string)
-export const baseURL =
-  process.env.REACT_APP_API_BASE_URL ??
-  "https://uat-api.shweyokelayexpress.com/api";
-export const imageURL =
-  process.env.REACT_APP_IMAGE_URL ?? "https://uat-api.shweyokelayexpress.com";
+// export const baseURL = "http://localhost:8000/api";
+// export const imageURL = "http://localhost:8000";
 
-// prod || uat default (must match backend APP_KEY without "base64:" prefix)
-export const secretKey =
-  process.env.REACT_APP_LARAVEL_SECRET_KEY ??
-  "1GgK/5jB8t71Jgp6cFvQeMiGQh0g16gq07Z9mR4ob+c=";
+// UAT
+// export const baseURL = "https://uat-api.shweyokelayexpress.com/api";
+// export const imageURL = "https://uat-api.shweyokelayexpress.com";
+
+//  PROD
+export const baseURL = "https://api.shweyokelayexpress.com/api";
+export const imageURL = "https://api.shweyokelayexpress.com";
+
+export const secretKey = "LVOiQ1Pk1d0srn3IJSBLrEqhoVKvODwyw+Fr/j9f0wU="; // prod || uat
 
 export const endpoints = {
   dashboardData: "dashboardData",
@@ -67,3 +65,5 @@ export const endpoints = {
 
   image: `${imageURL}`,
 };
+
+
