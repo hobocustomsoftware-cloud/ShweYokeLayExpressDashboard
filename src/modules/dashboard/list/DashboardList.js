@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   IconButton,
   Paper,
@@ -43,15 +42,20 @@ import { TableCustomizeSetting } from "../../../shares/TableCustomizeSetting";
 import { dashboardPayload } from "../dashboardPayload";
 import { dashboardService } from "../dashboardService";
 import dayjs from "dayjs";
-import { setDateFilter } from "../../../shares/shareSlice";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import { Dialog, DialogTitle, DialogContent } from "@mui/material";
+import { AirplaneTicketOutlined } from "@mui/icons-material";
+import { Chip, Stack } from "@mui/material";
 
 export const DashboardList = () => {
+  const [openNoti, setOpenNoti] = useState(false);
+  const [notiData, setNotiData] = useState([]);
+  const [hasNoti, setHasNoti] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const userRole = useSelector((state) => state.share.role);
   const dashboardData = useSelector((state) => state.dashboard);
   const user = useSelector((state) => state.share.user);
   const loggedInUserId = user?.id;
-  const [params, setParams] = useState({});
   const [tableData, setTableData] = useState([]);
   const [paginateParams, setPaginateParams] = useState({
     page: 1,
@@ -83,6 +87,13 @@ export const DashboardList = () => {
         role: userRole,
       });
       if (result.status) {
+        const noti = result?.data?.dashboard_noti;
+
+        if (noti) {
+          setHasNoti(noti.has_new_noti);
+          setNotiData(noti.pending_histories || []);
+        }
+
         const paymentHistories = result.data?.payment_histories;
         setTotal(paymentHistories?.total ?? 0);
 
@@ -188,7 +199,8 @@ export const DashboardList = () => {
               color: "border border-blue-400",
               label: "Total Ticket Amount",
               value:
-                result?.data?.sales_detail_summary?.total?.toLocaleString() || 0,
+                result?.data?.sales_detail_summary?.total?.toLocaleString() ||
+                0,
             },
             {
               color: "border border-blue-400",
@@ -318,13 +330,6 @@ export const DashboardList = () => {
     setData(dashboardPayload.columnsName, columns);
   }, [columns]);
 
-  // console.log(loggedInUserId);
-  // const handleDateChange = (field, date) => {
-  //   const formatted = date ? date.format("YYYY-MM-DD") : null;
-  //   const updated = { ...paginateParams, [field]: formatted };
-  //   setPaginateParams(updated);
-  //   dispatch(setPaginate(updated));
-  // };
   const handleDateChange = (field, date) => {
     const formatted = date ? date.format("YYYY-MM-DD") : null;
     setSelectedDates((prev) => ({ ...prev, [field]: formatted }));
@@ -406,8 +411,48 @@ export const DashboardList = () => {
       </div>
     ));
 
+  const seatMapping = (number, routeType) => {
+    if (routeType === 1) {
+      const rowIndex = Math.floor((number - 1) / 3);
+      const rowLetter = String.fromCharCode(65 + rowIndex);
+      const seatPos = ((number - 1) % 3) + 1;
+      return `${rowLetter}${seatPos}`;
+    }
+    return number;
+  };
+
+  const parseSeats = (seatStr) => {
+    try {
+      return JSON.parse(seatStr || "[]");
+    } catch {
+      return [];
+    }
+  };
+
+  const formatTime = (timeStr) => {
+    if (!timeStr) return "";
+
+    const [hourStr, minute] = timeStr.trim().split(":");
+    let hour = parseInt(hourStr, 10);
+
+    const period = hour >= 12 ? "PM" : "AM";
+    hour = hour % 12;
+    if (hour === 0) hour = 12;
+
+    return `${hour}:${minute} ${period}`;
+  };
+
   return (
     <div className="flex flex-col w-full">
+      <div className="flex justify-start mb-3">
+        <IconButton onClick={() => setOpenNoti(true)}>
+          <NotificationsIcon
+            sx={{
+              color: hasNoti ? "red" : "action.active",
+            }}
+          />
+        </IconButton>
+      </div>
       <Breadcrumb />
 
       {isLoading ? (
@@ -821,6 +866,87 @@ export const DashboardList = () => {
           </div>
         </div>
       )}
+
+      <Dialog
+        open={openNoti}
+        onClose={() => setOpenNoti(false)}
+        fullWidth
+        maxWidth="sm"
+      >
+        {notiData.length > 0 && <DialogTitle>Pending Tickets</DialogTitle>}
+        <DialogContent>
+          {notiData.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-10 text-center">
+              <AirplaneTicketOutlined color="error" sx={{ fontSize: 40 }} />
+              <h2 className="text-xl font-semibold text-gray-700">
+                No Pending Tickets
+              </h2>
+              <p className="text-gray-400 mt-1">
+                You don’t have any pending tickets at the moment.
+              </p>
+            </div>
+          ) : (
+            notiData.map((item) => {
+              const seats = parseSeats(item.seat);
+              const routeType = item.route?.vehicles_type_id;
+
+              return (
+                <Paper key={item.id} sx={{ p: 2, mb: 2 }}>
+                  <p>
+                    <strong>ID:</strong> {item.id}
+                  </p>
+
+                  <p className="flex gap-2">
+                    <strong>Seat:</strong>{" "}
+                    <Stack direction="row" spacing={1} flexWrap="wrap">
+                      {seats.map((s, idx) => (
+                        <Chip
+                          key={idx}
+                          label={seatMapping(s.number, routeType)}
+                          color="primary"
+                          variant="outlined"
+                          size="small"
+                        />
+                      ))}
+                    </Stack>
+                  </p>
+
+                  <p>
+                    <strong>Departure:</strong> {item.start_time || "-"}{" "}
+                    <span className="text-orange-600">
+                      {formatTime(item.route?.departure)}
+                    </span>
+                  </p>
+
+                  <p>
+                    <strong>Name:</strong> {item.name}
+                  </p>
+
+                  <p>
+                    <strong>Phone:</strong> {item.phone}
+                  </p>
+
+                  <p>
+                    <strong>NRC:</strong> {item.nrc}
+                  </p>
+
+                  <p>
+                    <strong>Note:</strong> {item.note ?? "-"}
+                  </p>
+
+                  <p>
+                    <strong>Purchased Amount:</strong> {item.purchased_amount}
+                  </p>
+
+                  <p>
+                    <strong>Route:</strong> {item.route?.name}
+                  </p>
+                </Paper>
+              );
+            })
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

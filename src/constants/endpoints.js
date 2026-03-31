@@ -1,5 +1,5 @@
-// export const baseURL = "http://localhost:8000/api";
-// export const imageURL = "http://localhost:8000";
+// export const baseURL = "http://127.0.0.1:8000/api";
+// export const imageURL = "http://127.0.0.1:8000";
 
 // UAT
 // export const baseURL = "https://uat-api.shweyokelayexpress.com/api";
@@ -9,7 +9,8 @@
 export const baseURL = "https://api.shweyokelayexpress.com/api";
 export const imageURL = "https://api.shweyokelayexpress.com";
 
-export const secretKey = "LVOiQ1Pk1d0srn3IJSBLrEqhoVKvODwyw+Fr/j9f0wU="; // prod || uat
+export const secretKey = "LVOiQ1Pk1d0srn3IJSBLrEqhoVKvODwyw+Fr/j9f0wU="; // prod
+// export const secretKey = "bqCsWvUbiUeKS+Kwc4Ty/6GGOAxub3M386m37SJBbMc="; // local
 
 export const endpoints = {
   dashboardData: "dashboardData",
@@ -65,5 +66,3 @@ export const endpoints = {
 
   image: `${imageURL}`,
 };
-
-
