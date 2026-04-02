@@ -46,7 +46,7 @@ const AdminVipSeatLock = ({ totalSeat }) => {
   }, []);
 
   const { userRole, permissions } = useSelector(
-    (state) => state.bookingInformation
+    (state) => state.bookingInformation,
   );
   const canLock =
     storeData.role === "SUPER_ADMIN" ||
@@ -59,11 +59,11 @@ const AdminVipSeatLock = ({ totalSeat }) => {
 
   const dispatch = useDispatch();
   const { bookedSeats, selectedSeat } = useSelector(
-    (state) => state.bookingInformation
+    (state) => state.bookingInformation,
   );
 
   const { selectedRoute, selectedDate } = useSelector(
-    (state) => state.closeSeats
+    (state) => state.closeSeats,
   );
 
   const seatsPerRow = 3;
@@ -124,7 +124,7 @@ const AdminVipSeatLock = ({ totalSeat }) => {
   //   }
   // }, [bookedSeats]);
   useEffect(() => {
-    if (bookedSeats && bookedSeats.length > 0) {
+    if (Array.isArray(bookedSeats) && bookedSeats.length > 0) {
       // Parse seat JSON for each booking record
       const parsed = bookedSeats.flatMap((booking) => {
         try {
@@ -174,7 +174,7 @@ const AdminVipSeatLock = ({ totalSeat }) => {
           updateNotification({
             variant: "success",
             message: result.message,
-          })
+          }),
         );
 
         // Update local lockedSeats
@@ -182,7 +182,7 @@ const AdminVipSeatLock = ({ totalSeat }) => {
           (prev) =>
             isCurrentlyLocked
               ? prev.filter((s) => s !== modal.seatNumber) // unlock
-              : [...prev, modal.seatNumber] // lock
+              : [...prev, modal.seatNumber], // lock
         );
 
         // Update modal orderId if backend created new booking
@@ -205,7 +205,7 @@ const AdminVipSeatLock = ({ totalSeat }) => {
           updateNotification({
             variant: "error",
             message: result.message || "Error updating seat lock",
-          })
+          }),
         );
       }
     } catch (error) {
@@ -214,7 +214,7 @@ const AdminVipSeatLock = ({ totalSeat }) => {
         updateNotification({
           variant: "error",
           message: error.response?.data?.message || "Something went wrong",
-        })
+        }),
       );
     }
   };
@@ -249,12 +249,16 @@ const AdminVipSeatLock = ({ totalSeat }) => {
             seatIndex,
           } = getSeatLabel(index, seatsPerRow);
 
-          const selectedSeatData = selectedSeat.find(
-            (seat) => seat.number === seatValue
+          const selectedSeatData = Array.isArray(selectedSeat)
+            ? selectedSeat.find((seat) => seat.number === seatValue)
+            : null;
+          const flatBookedSeats = Array.isArray(bookedSeats)
+            ? bookedSeats.flat()
+            : [];
+
+          const bookedSeatData = flatBookedSeats.find(
+            (seat) => seat.number === seatValue,
           );
-          const bookedSeatData = bookedSeats
-            .flat()
-            .find((seat) => seat.number === seatValue);
 
           const isSold = bookedSeatData?.status === "SUCCESS";
           const locked = isLocked(seatValue);
@@ -292,13 +296,19 @@ const AdminVipSeatLock = ({ totalSeat }) => {
 
                 if (locked) {
                   // toggle lock/unlock directly
+                  // setModal({
+                  //   visible: true,
+                  //   seatNumber: seatValue,
+                  //   mode: "SEAT",
+                  //   orderId: bookedSeatData?.order_id || null,
+                  // });
+                  // handleLockUnlock();
                   setModal({
                     visible: true,
                     seatNumber: seatValue,
                     mode: "SEAT",
                     orderId: bookedSeatData?.order_id || null,
                   });
-                  handleLockUnlock();
                 } else if (bookedSeatData?.status === "BOOKED") {
                   // open modal for payment
                   setModal({

@@ -91,7 +91,7 @@ const VipSeatLayout = () => {
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
-        }
+        },
       );
 
       if (result.status === 201) {
@@ -99,7 +99,7 @@ const VipSeatLayout = () => {
           updateNotification({
             variant: "success",
             message: "Ticket Successfully Bought!",
-          })
+          }),
         );
         navigate("/saleCounter/printTicket");
       } else {
@@ -107,7 +107,7 @@ const VipSeatLayout = () => {
           updateNotification({
             variant: "error",
             message: result.message || "Error processing payment",
-          })
+          }),
         );
       }
     } catch (error) {
@@ -116,7 +116,7 @@ const VipSeatLayout = () => {
         updateNotification({
           variant: "error",
           message: error.response?.data?.message || "Something went wrong",
-        })
+        }),
       );
     } finally {
       setModal({ visible: false, seatNumber: null, mode: null, orderId: null });
@@ -175,7 +175,7 @@ const VipSeatLayout = () => {
           updateNotification({
             variant: "success",
             message: result.message,
-          })
+          }),
         );
 
         // Update local lockedSeats
@@ -183,7 +183,7 @@ const VipSeatLayout = () => {
           (prev) =>
             isCurrentlyLocked
               ? prev.filter((s) => s !== modal.seatNumber) // unlock
-              : [...prev, modal.seatNumber] // lock
+              : [...prev, modal.seatNumber], // lock
         );
 
         // Update modal orderId if backend created new booking
@@ -206,7 +206,7 @@ const VipSeatLayout = () => {
           updateNotification({
             variant: "error",
             message: result.message || "Error updating seat lock",
-          })
+          }),
         );
       }
     } catch (error) {
@@ -215,7 +215,7 @@ const VipSeatLayout = () => {
         updateNotification({
           variant: "error",
           message: error.response?.data?.message || "Something went wrong",
-        })
+        }),
       );
     }
   };
@@ -250,8 +250,8 @@ const VipSeatLayout = () => {
             seatIndex,
           } = getSeatLabel(index, seatsPerRow);
 
-          const selectedSeatData = selectedSeat.find(
-            (seat) => seat.number === seatValue // compare by seatValue
+          const selectedSeatData = selectedSeat?.find(
+            (seat) => seat.number === seatValue, // compare by seatValue
           );
           const bookedSeatData = bookedSeats
             .flat()

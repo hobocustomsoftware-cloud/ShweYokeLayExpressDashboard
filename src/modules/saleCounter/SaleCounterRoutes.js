@@ -24,7 +24,7 @@ export const saleCounterRoutes = [
   },
   {
     id: "saleCheckPage",
-    path: paths.ssaleCheckPage,
+    path: paths.saleCheckPage,
     element: <SaleCheckPage />,
     loader: () => {
       return {

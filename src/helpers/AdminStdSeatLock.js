@@ -26,17 +26,17 @@ const AdminStdSeatLock = ({ totalSeat }) => {
   const [lockedSeats, setLockedSeats] = useState([]);
   const [storeData, setStoreData] = useState({});
   const { userRole, permissions } = useSelector(
-    (state) => state.bookingInformation
+    (state) => state.bookingInformation,
   );
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { selectedSeat, bookedSeats } = useSelector(
-    (state) => state.bookingInformation
+    (state) => state.bookingInformation,
   );
 
   const { selectedRoute, selectedDate } = useSelector(
-    (state) => state.closeSeats
+    (state) => state.closeSeats,
   );
 
   const isLocked = (seatNumber) => lockedSeats.includes(seatNumber);
@@ -142,7 +142,7 @@ const AdminStdSeatLock = ({ totalSeat }) => {
           updateNotification({
             variant: "success",
             message: result.message,
-          })
+          }),
         );
 
         // Update local lockedSeats
@@ -150,7 +150,7 @@ const AdminStdSeatLock = ({ totalSeat }) => {
           (prev) =>
             isCurrentlyLocked
               ? prev.filter((s) => s !== modal.seatNumber) // unlock
-              : [...prev, modal.seatNumber] // lock
+              : [...prev, modal.seatNumber], // lock
         );
 
         // Update modal orderId if backend created new booking
@@ -173,7 +173,7 @@ const AdminStdSeatLock = ({ totalSeat }) => {
           updateNotification({
             variant: "error",
             message: result.message || "Error updating seat lock",
-          })
+          }),
         );
       }
     } catch (error) {
@@ -182,7 +182,7 @@ const AdminStdSeatLock = ({ totalSeat }) => {
         updateNotification({
           variant: "error",
           message: error.response?.data?.message || "Something went wrong",
-        })
+        }),
       );
     }
   };
@@ -212,12 +212,21 @@ const AdminStdSeatLock = ({ totalSeat }) => {
         {Array.from({ length: totalSeats }).map((_, index) => {
           const seatNumber = index + 1;
 
-          const selectedSeatData = selectedSeat.find(
-            (s) => s.number === seatNumber
+          const safeSelectedSeat = Array.isArray(selectedSeat)
+            ? selectedSeat
+            : [];
+
+          const selectedSeatData = safeSelectedSeat.find(
+            (s) => s.number === seatNumber,
           );
-          const bookedSeatData = bookedSeats
-            .flat()
-            .find((s) => s.number === seatNumber);
+
+          const safeBookedSeats = Array.isArray(bookedSeats) ? bookedSeats : [];
+
+          const flatBookedSeats = safeBookedSeats.flat();
+
+          const bookedSeatData = flatBookedSeats.find(
+            (s) => s.number === seatNumber,
+          );
 
           const seat = selectedSeatData || bookedSeatData;
           const seatType = seat ? seat.type?.toLowerCase() : "available";
@@ -245,13 +254,19 @@ const AdminStdSeatLock = ({ totalSeat }) => {
 
                 if (locked) {
                   // toggle lock/unlock directly
+                  // setModal({
+                  //   visible: true,
+                  //   seatNumber,
+                  //   mode: "SEAT",
+                  //   orderId: bookedSeatData?.order_id || null,
+                  // });
+                  // handleLockUnlock();
                   setModal({
                     visible: true,
                     seatNumber,
                     mode: "SEAT",
                     orderId: bookedSeatData?.order_id || null,
                   });
-                  handleLockUnlock(); // 👈 call your lock/unlock function
                 } else if (isBooked) {
                   // open modal for payment
                   setModal({

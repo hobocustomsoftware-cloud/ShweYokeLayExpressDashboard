@@ -266,7 +266,7 @@ const StandardSeatLayout = () => {
         {/* {Array.from({ length: totalSeats }).map((_, index) => {
           const seatNumber = index + 1;
 
-          const selectedSeatData = selectedSeat.find(
+          const selectedSeatData = selectedSeat?.find(
             (s) => s.number === seatNumber
           );
           const bookedSeatData = bookedSeats
@@ -321,7 +321,7 @@ const StandardSeatLayout = () => {
         {Array.from({ length: totalSeats }).map((_, index) => {
           const seatNumber = index + 1;
 
-          const selectedSeatData = selectedSeat.find(
+          const selectedSeatData = selectedSeat?.find(
             (s) => s.number === seatNumber
           );
           const bookedSeatData = bookedSeats

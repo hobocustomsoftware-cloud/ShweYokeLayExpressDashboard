@@ -36,7 +36,7 @@ export const paths = {
   seatSelectionPage: "/saleCounter/new/seatSelectionPage",
   printTicket: "/saleCounter/printTicket",
 
-  ssaleCheckPage: "/ssaleCheckPage",
+  saleCheckPage: "/saleCheckPage",
   blockSeatsPage: "/blockSeatsPage",
   blockSeats: "/blockSeats",
   unblockSeats: "/unblockSeats",

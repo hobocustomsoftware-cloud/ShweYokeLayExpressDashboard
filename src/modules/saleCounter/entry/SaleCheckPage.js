@@ -358,7 +358,7 @@ export const SaleCheckPage = () => {
           <Grid item xs={12}>
             <FormMainAction
               cancel="Cancel"
-              cancelClick={() => navigate(paths.ssaleCheckPage)}
+              cancelClick={() => navigate(paths.saleCheckPage)}
               submit="Search"
               submitClick={submitGenre}
               loading={loading}

@@ -26,7 +26,7 @@ const StandardSeatLayoutBlock = ({ totalSeat }) => {
   const [lockedSeats, setLockedSeats] = useState([]);
   const [storeData, setStoreData] = useState({});
   const { userRole, permissions } = useSelector(
-    (state) => state.bookingInformation
+    (state) => state.bookingInformation,
   );
 
   const dispatch = useDispatch();
@@ -127,7 +127,7 @@ const StandardSeatLayoutBlock = ({ totalSeat }) => {
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
-        }
+        },
       );
 
       if (result.status === 201) {
@@ -135,7 +135,7 @@ const StandardSeatLayoutBlock = ({ totalSeat }) => {
           updateNotification({
             variant: "success",
             message: "Ticket Successfully Bought!",
-          })
+          }),
         );
         navigate("/saleCounter/printTicket");
       } else {
@@ -143,7 +143,7 @@ const StandardSeatLayoutBlock = ({ totalSeat }) => {
           updateNotification({
             variant: "error",
             message: result.message || "Error processing payment",
-          })
+          }),
         );
       }
     } catch (error) {
@@ -152,7 +152,7 @@ const StandardSeatLayoutBlock = ({ totalSeat }) => {
         updateNotification({
           variant: "error",
           message: error.response?.data?.message || "Something went wrong",
-        })
+        }),
       );
     } finally {
       setModal({ visible: false, seatNumber: null, mode: null, orderId: null });
@@ -197,7 +197,7 @@ const StandardSeatLayoutBlock = ({ totalSeat }) => {
           updateNotification({
             variant: "success",
             message: result.message,
-          })
+          }),
         );
 
         // Update local lockedSeats
@@ -205,7 +205,7 @@ const StandardSeatLayoutBlock = ({ totalSeat }) => {
           (prev) =>
             isCurrentlyLocked
               ? prev.filter((s) => s !== modal.seatNumber) // unlock
-              : [...prev, modal.seatNumber] // lock
+              : [...prev, modal.seatNumber], // lock
         );
 
         // Update modal orderId if backend created new booking
@@ -228,7 +228,7 @@ const StandardSeatLayoutBlock = ({ totalSeat }) => {
           updateNotification({
             variant: "error",
             message: result.message || "Error updating seat lock",
-          })
+          }),
         );
       }
     } catch (error) {
@@ -237,7 +237,7 @@ const StandardSeatLayoutBlock = ({ totalSeat }) => {
         updateNotification({
           variant: "error",
           message: error.response?.data?.message || "Something went wrong",
-        })
+        }),
       );
     }
   };
@@ -266,7 +266,7 @@ const StandardSeatLayoutBlock = ({ totalSeat }) => {
         {/* {Array.from({ length: totalSeats }).map((_, index) => {
           const seatNumber = index + 1;
 
-          const selectedSeatData = selectedSeat.find(
+          const selectedSeatData = selectedSeat?.find(
             (s) => s.number === seatNumber
           );
           const bookedSeatData = bookedSeats
@@ -321,8 +321,8 @@ const StandardSeatLayoutBlock = ({ totalSeat }) => {
         {Array.from({ length: totalSeats }).map((_, index) => {
           const seatNumber = index + 1;
 
-          const selectedSeatData = selectedSeat.find(
-            (s) => s.number === seatNumber
+          const selectedSeatData = selectedSeat?.find(
+            (s) => s.number === seatNumber,
           );
           const bookedSeatData = bookedSeats
             .flat()

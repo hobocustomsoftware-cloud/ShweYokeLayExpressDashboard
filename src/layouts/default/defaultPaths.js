@@ -138,7 +138,7 @@ export const items = [
     // roles: ["SUPER_ADMIN", "USER", "SALES", "AGENT"],
     permission: "Sale_Check_Sidebar",
     icon: <ManageSearchIcon />,
-    url: paths.ssaleCheckPage,
+    url: paths.saleCheckPage,
   },
   {
     key: "blockSeats",
@@ -376,7 +376,7 @@ export const items = [
         icon: <LocalOfferIcon />,
         url: paths.promotions,
       },
-          ],
+    ],
   },
   {
     key: "member",
